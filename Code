@@ -1,0 +1,86 @@
+
+#CODE 
+
+import numpy as np
+import matplotlib.pyplot as plt
+
+class chemist:
+    def __init__(self):
+        
+        self.medicine_names = np.array([])
+        self.prices = np.array([])
+        self.quantities = np.array([])
+        self.sales = []
+        self.profits = []
+
+   
+    def add_medicine(self, name, price, quantity):
+        self.medicine_names = np.append(self.medicine_names, name)
+        self.prices = np.append(self.prices, price)
+        self.quantities = np.append(self.quantities, quantity)
+        print(f"Added {name} with price {price} and quantity {quantity}")
+
+   
+    def additem(self, name, price, quantity):
+        self.add_medicine(name, price, quantity)
+
+   
+    def updateqty(self, name, quantity_sold):
+        if name in self.medicine_names:
+            index = np.where(self.medicine_names == name)[0][0]
+            if self.quantities[index] >= quantity_sold:
+                self.quantities[index] -= quantity_sold
+                sale_amount = quantity_sold * self.prices[index]
+                profit = sale_amount * 0.4
+                self.sales.append(sale_amount)
+                self.profits.append(profit)
+                print(f"Sold {quantity_sold} of {name}. Total sale: {sale_amount}, Profit: {profit}")
+            else:
+                print(f"Not enough {name} in stock!")
+        else:
+            print(f"{name} not found in inventory!")
+
+   
+    def calsaleprofit(self):
+        total_sales = sum(self.sales)
+        total_profit = sum(self.profits)
+        print(f"Total Sales: {total_sales}, Total Profit: {total_profit}")
+        return total_sales, total_profit
+
+   
+    def display(self):
+        print("Current medicine stock:")
+        for i in range(len(self.medicine_names)):
+            print(f"{self.medicine_names[i]}: Price = {self.prices[i]}, Quantity = {self.quantities[i]}")
+
+    
+    def plotting(self):
+        days = list(range(1, len(self.sales) + 1))
+        plt.scatter(days, self.sales, label='Sales', color='r')
+        plt.scatter(days, self.profits, label='Profit', color='b')
+        # plt.scatter(self.profits,self.sales, color='r')
+        
+        plt.xlabel('Day')
+        plt.ylabel('Amount cash')
+        # plt.xlabel('Profit')
+        # plt.ylabel('Sales')
+        plt.title('Total Sales and Profit')
+        plt.legend()
+        plt.show()
+
+
+shop = chemist()
+
+
+shop.additem("Dolo", 10, 50)
+shop.additem("Digene", 20, 30)
+shop.additem("Nimuflex", 15, 40)
+shop.additem("Aspirin", 20, 10)
+shop.additem("Painkiller", 10, 30)
+
+
+shop.updateqty("Dolo", 30)
+shop.updateqty("Digene", 5)
+shop.display()
+shop.calsaleprofit()
+shop.plotting()
